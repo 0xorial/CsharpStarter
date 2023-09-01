@@ -1,0 +1,13 @@
+The way I like C# Web API projects:
+- functional testing using Microsoft.AspNetCore.Mvc.Testing:
+  - HTTP request/response serialization covered
+  - most of DI config is covered
+  - all optional pipeline middlewares covered
+- abstracting only external dependencies
+- DB included in tests:
+  - migrations are covered
+  - SQL queries are covered
+  - auto-creates localdb instance, so no SQL instance hassle
+- FluentMigrations for db migrations -> can run on localdb, or from tests, or make a migration script for an external db team
+- dapper for queries -> full richness of SQL
+- time traveling with Microsoft.Extensions.TimeProvider.Testing -> tests blazing fast and predictable

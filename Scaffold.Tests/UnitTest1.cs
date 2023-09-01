@@ -43,12 +43,6 @@ public class UnitTest1
         await response1.AssertOk();
 
         h.ExternalServices.TimeProvider.Advance(TimeSpan.FromSeconds(11));
-        await TimingHelpers.AsyncSpinWaitUntil(async () =>
-        {
-            var response3 = await client.Request("list").GetJsonAsync<ListedItemDto[]>();
-            return response3[0].TranslatedText != null;
-        });
-
         var response3 = await client.Request("list").GetJsonAsync<ListedItemDto[]>();
         response3[0].TranslatedText.Should().EndWith("_translated");
 
