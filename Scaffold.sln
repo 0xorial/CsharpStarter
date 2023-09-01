@@ -4,6 +4,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Api", "Scaffold.Ap
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Tests", "Scaffold.Tests\Scaffold.Tests.csproj", "{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Database", "Scaffold.Database\Scaffold.Database.csproj", "{889496DA-2427-4D9D-8D0E-7A5B0544697F}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -18,5 +20,9 @@ Global
 		{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{889496DA-2427-4D9D-8D0E-7A5B0544697F}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{889496DA-2427-4D9D-8D0E-7A5B0544697F}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{889496DA-2427-4D9D-8D0E-7A5B0544697F}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{889496DA-2427-4D9D-8D0E-7A5B0544697F}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 EndGlobal

@@ -22,7 +22,14 @@
     </ItemGroup>
 
     <ItemGroup>
-      <ProjectReference Include="..\Scaffold.Api\Scaffold.Api.csproj" />
+        <ProjectReference Include="..\Scaffold.Api\Scaffold.Api.csproj" />
+        <ProjectReference Include="..\Scaffold.Database\Scaffold.Database.csproj" />
+    </ItemGroup>
+
+    <ItemGroup>
+        <None Include="appsettings*.json">
+            <CopyToOutputDirectory>PreserveNewest</CopyToOutputDirectory>
+        </None>
     </ItemGroup>
 
     <ItemGroup>

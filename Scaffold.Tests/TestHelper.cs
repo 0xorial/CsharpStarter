@@ -5,6 +5,7 @@ using Microsoft.Extensions.Configuration;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
+using Respawn;
 
 namespace Scaffold.Tests;
 
@@ -23,12 +24,17 @@ public class TestHelper : IDisposable
             .AddEnvironmentVariables()
             .AddInMemoryCollection(configOverrides ?? Array.Empty<KeyValuePair<string, string?>>());
         await Program.ConfigureBuilderAsync(builder);
+
         builder.Host.UseSerilog((context, configuration) =>
         {
             configuration
                 .ReadFrom.Configuration(context.Configuration)
                 .WriteTo.Sink(sink);
         });
+
+        var connectionString = builder.Configuration.GetConnectionString("main");
+        await Checkpoint.Reset(connectionString);
+
         var app = builder.Build();
 
         // this is very useful in particular to capture console output,
@@ -39,6 +45,29 @@ public class TestHelper : IDisposable
         await app.StartAsync();
 
         return new TestHelper(app, sink);
+    }
+
+    private static readonly Checkpoint Checkpoint = new()
+    {
+        TablesToIgnore = new[] { "VersionInfo" }
+    };
+
+    private static void MakeCommonConfiguration(IConfigurationBuilder builder,
+        IEnumerable<KeyValuePair<string, string?>> configOverrides)
+    {
+        builder
+            .AddJsonFile("appsettings.Tests.json")
+            .AddEnvironmentVariables()
+            .AddInMemoryCollection(configOverrides);
+    }
+
+    public static void EnsureLocalDbExistsAndMigrateUp()
+    {
+        var configurationBuilder = new ConfigurationBuilder();
+        MakeCommonConfiguration(configurationBuilder, Array.Empty<KeyValuePair<string, string?>>());
+        var configuration = configurationBuilder.Build();
+        var connectionString = configuration.GetConnectionString("main");
+        Database.Program.Main("--p", "false", "--c", connectionString!);
     }
 
     public FlurlClient GetClient()
