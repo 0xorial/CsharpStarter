@@ -1,0 +1,22 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Api", "Scaffold.Api\Scaffold.Api.csproj", "{815B675C-175E-4880-BA08-457E1EA1A101}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Scaffold.Tests", "Scaffold.Tests\Scaffold.Tests.csproj", "{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{815B675C-175E-4880-BA08-457E1EA1A101}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{815B675C-175E-4880-BA08-457E1EA1A101}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{815B675C-175E-4880-BA08-457E1EA1A101}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{815B675C-175E-4880-BA08-457E1EA1A101}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9EA371A6-2DCC-4461-B0C4-2CA183A519EE}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+EndGlobal
