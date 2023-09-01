@@ -1,6 +1,6 @@
 ﻿using Scaffold.Api;
 
-namespace Scaffold.Tests;
+namespace Scaffold.Tests.Utils;
 
 public class TestTranslationService : ITranslationService
 {

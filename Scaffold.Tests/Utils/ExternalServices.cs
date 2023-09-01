@@ -1,4 +1,4 @@
-﻿namespace Scaffold.Tests;
+﻿namespace Scaffold.Tests.Utils;
 
 public class ExternalServices
 {

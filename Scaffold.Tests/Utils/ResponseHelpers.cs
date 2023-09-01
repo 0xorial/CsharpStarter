@@ -1,6 +1,6 @@
 ﻿using Flurl.Http;
 
-namespace Scaffold.Tests;
+namespace Scaffold.Tests.Utils;
 
 public static class ResponseHelpers
 {

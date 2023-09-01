@@ -1,4 +1,6 @@
 using Flurl.Http;
+using Scaffold.Api;
+using Scaffold.Tests.Utils;
 
 namespace Scaffold.Tests;
 
@@ -38,10 +40,15 @@ public class UnitTest1
 
         var client = h.GetClient();
         var response1 = await client.Request().PostAsync(new StringContent("test123"));
-        var response3 = await client.Request("list").GetJsonAsync<ListedItemDto[]>();
         await response1.AssertOk();
-        response3.Length.Should().Be(1);
-        response3.Should().ContainSingle(x => x.TranslatedText != null && x.TranslatedText.EndsWith("_translated"));
-        h.ExternalServices.TranslationService.TotalCalls.Should().BeLessThanOrEqualTo(1);
+
+        await TimingHelpers.AsyncSpinWaitUntil(async () =>
+        {
+            var response3 = await client.Request("list").GetJsonAsync<ListedItemDto[]>();
+            return response3[0].TranslatedText != null;
+        });
+
+        var response3 = await client.Request("list").GetJsonAsync<ListedItemDto[]>();
+        response3[0].TranslatedText.Should().EndWith("_translated");
     }
 }

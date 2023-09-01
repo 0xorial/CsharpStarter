@@ -3,13 +3,13 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Respawn;
+using Scaffold.Api;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
-using Respawn;
-using Scaffold.Api;
 
-namespace Scaffold.Tests;
+namespace Scaffold.Tests.Utils;
 
 public class TestHelper : IDisposable
 {

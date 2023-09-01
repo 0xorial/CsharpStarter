@@ -1,5 +1,6 @@
 using System.Diagnostics;
 using Flurl.Http;
+using Scaffold.Tests.Utils;
 
 namespace Scaffold.Tests;
 
