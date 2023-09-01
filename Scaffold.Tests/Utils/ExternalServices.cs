@@ -1,7 +1,10 @@
-﻿namespace Scaffold.Tests.Utils;
+﻿using Microsoft.Extensions.Time.Testing;
+
+namespace Scaffold.Tests.Utils;
 
 public class ExternalServices
 {
-    public TestTranslationService TranslationService = new TestTranslationService();
+    public readonly TestTranslationService TranslationService = new();
+    public readonly FakeTimeProvider TimeProvider = new();
 
 }

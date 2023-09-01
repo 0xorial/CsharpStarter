@@ -6,18 +6,19 @@ namespace Scaffold.Api;
 public class TranslationFetchBackgroundService : BackgroundService
 {
     private readonly IServiceScopeFactory _serviceScopeFactory;
+    private readonly TimeProvider _timeProvider;
 
-    public TranslationFetchBackgroundService(IServiceScopeFactory serviceScopeFactory)
+    public TranslationFetchBackgroundService(IServiceScopeFactory serviceScopeFactory, TimeProvider timeProvider)
     {
         _serviceScopeFactory = serviceScopeFactory;
+        _timeProvider = timeProvider;
     }
 
     protected override async Task ExecuteAsync(CancellationToken stoppingToken)
     {
         while (!stoppingToken.IsCancellationRequested)
         {
-            await Task.Delay(500, stoppingToken);
-
+            await _timeProvider.Delay(TimeSpan.FromSeconds(10), stoppingToken);
             using var scope = _serviceScopeFactory.CreateScope();
             using var connection = scope.ServiceProvider.GetRequiredService<IDbConnection>();
             connection.Open();

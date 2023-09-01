@@ -36,6 +36,7 @@ namespace Scaffold.Api
             builder.Services.AddScoped<IDbConnection>(services =>
                 new SqlConnection(services.GetRequiredService<IConfiguration>().GetConnectionString("main")));
 
+            builder.Services.AddSingleton(TimeProvider.System);
             builder.Services.AddScoped<ITranslationService, TranslationService>();
             builder.Services.AddHostedService<TranslationFetchBackgroundService>();
 
@@ -57,11 +58,8 @@ namespace Scaffold.Api
                 using var connection = context.RequestServices.GetRequiredService<IDbConnection>();
                 connection.Open();
                 var rawRequestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
-                var translationService = context.RequestServices.GetRequiredService<ITranslationService>();
-                var translation = await translationService.GetTranslation(rawRequestBody);
-                var itemId = await connection.QuerySingleAsync<int>(
+                await connection.ExecuteAsync(
                     $"INSERT INTO Items (Text) " +
-                    $"OUTPUT INSERTED.Id " +
                     $"VALUES ('{rawRequestBody}')");
                 context.Response.StatusCode = 200;
                 await context.Response.WriteAsync("OK!");

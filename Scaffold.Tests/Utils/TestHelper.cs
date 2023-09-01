@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Time.Testing;
 using Respawn;
 using Scaffold.Api;
 using Serilog;
@@ -31,6 +32,7 @@ public class TestHelper : IDisposable
 
         var externals = new ExternalServices();
 
+        builder.Services.AddSingleton<TimeProvider>(externals.TimeProvider);
         builder.Services.AddSingleton<ITranslationService>(externals.TranslationService);
 
         builder.Host.UseSerilog((context, configuration) =>

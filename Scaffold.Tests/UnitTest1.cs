@@ -42,6 +42,7 @@ public class UnitTest1
         var response1 = await client.Request().PostAsync(new StringContent("test123"));
         await response1.AssertOk();
 
+        h.ExternalServices.TimeProvider.Advance(TimeSpan.FromSeconds(11));
         await TimingHelpers.AsyncSpinWaitUntil(async () =>
         {
             var response3 = await client.Request("list").GetJsonAsync<ListedItemDto[]>();
@@ -50,5 +51,7 @@ public class UnitTest1
 
         var response3 = await client.Request("list").GetJsonAsync<ListedItemDto[]>();
         response3[0].TranslatedText.Should().EndWith("_translated");
+
+        h.ExternalServices.TranslationService.TotalCalls.Should().Be(1);
     }
 }
