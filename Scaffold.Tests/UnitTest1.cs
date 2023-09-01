@@ -23,11 +23,25 @@ public class UnitTest1
         var client = h.GetClient();
         var response1 = await client.Request().PostAsync(new StringContent("test123"));
         var response2 = await client.Request().PostAsync(new StringContent("test456"));
-        var response3 = await client.Request("list").GetJsonAsync<Item[]>();
+        var response3 = await client.Request("list").GetJsonAsync<ItemRecord[]>();
         await response1.AssertOk();
         await response2.AssertOk();
         response3.Length.Should().Be(2);
         response3.Should().ContainSingle(x => x.Text == "test123");
         response3.Should().ContainSingle(x => x.Text == "test456");
+    }
+
+    [TestMethod]
+    public async Task Translates()
+    {
+        using var h = await TestHelper.Create();
+
+        var client = h.GetClient();
+        var response1 = await client.Request().PostAsync(new StringContent("test123"));
+        var response3 = await client.Request("list").GetJsonAsync<ListedItemDto[]>();
+        await response1.AssertOk();
+        response3.Length.Should().Be(1);
+        response3.Should().ContainSingle(x => x.TranslatedText != null && x.TranslatedText.EndsWith("_translated"));
+        h.ExternalServices.TranslationService.TotalCalls.Should().BeLessThanOrEqualTo(1);
     }
 }

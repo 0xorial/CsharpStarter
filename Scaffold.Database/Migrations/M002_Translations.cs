@@ -3,17 +3,19 @@ using FluentMigrator.SqlServer;
 
 namespace Scaffold.Database.Migrations;
 
-[Migration(1)]
-public class M001_InitialModel : Migration
+[Migration(2)]
+public class M002_Translations : Migration
 {
     public override void Up()
     {
-        Create.Table("Items")
+        Create.Table("Translations")
             .WithColumn("Id")
             .AsInt32()
-            .PrimaryKey()
             .Identity()
-            .WithColumn("Text")
+            .WithColumn("ItemId")
+            .AsInt32()
+            .ForeignKey("Items", "Id")
+            .WithColumn("TranslatedText")
             .AsString();
     }
 

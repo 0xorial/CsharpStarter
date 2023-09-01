@@ -4,6 +4,7 @@ using ILogger = Serilog.ILogger;
 using System.Data;
 using System.Data.SqlClient;
 using Dapper;
+using Scaffold.Api;
 
 
 // this structure is based on this example:
@@ -35,6 +36,8 @@ public partial class Program
         builder.Services.AddScoped<IDbConnection>(services =>
             new SqlConnection(services.GetRequiredService<IConfiguration>().GetConnectionString("main")));
 
+        builder.Services.AddScoped<ITranslationService, TranslationService>();
+
         return Task.CompletedTask;
     }
 
@@ -53,7 +56,14 @@ public partial class Program
             using var connection = context.RequestServices.GetRequiredService<IDbConnection>();
             connection.Open();
             var rawRequestBody = await new StreamReader(context.Request.Body).ReadToEndAsync();
-            await connection.ExecuteAsync($"INSERT INTO Items (Text) VALUES ('{rawRequestBody}')");
+            var translationService = context.RequestServices.GetRequiredService<ITranslationService>();
+            var translation = await translationService.GetTranslation(rawRequestBody);
+            var itemId = await connection.QuerySingleAsync<int>(
+                $"INSERT INTO Items (Text) " +
+                $"OUTPUT INSERTED.Id " +
+                $"VALUES ('{rawRequestBody}')");
+            await connection.ExecuteAsync(
+                $"INSERT INTO Translations (ItemId, TranslatedText) VALUES ({itemId}, '{translation}')");
             context.Response.StatusCode = 200;
             await context.Response.WriteAsync("OK!");
         });
@@ -62,16 +72,38 @@ public partial class Program
         {
             using var connection = context.RequestServices.GetRequiredService<IDbConnection>();
             connection.Open();
-            var items = (await connection.QueryAsync<Item>($"SELECT * FROM Items")).ToArray();
+            var items = (await connection.QueryAsync<ItemRecord>($"SELECT * FROM Items")).ToArray();
+            var translations =
+                (await connection.QueryAsync<TranslationRecord>($"SELECT * FROM Translations")).ToArray();
+            var translationsByItemId = translations.ToDictionary(x => x.ItemId);
             context.Response.StatusCode = 200;
-            await context.Response.WriteAsJsonAsync(items);
+            await context.Response.WriteAsJsonAsync(items.Select(x => new ListedItemDto
+            {
+                Id = x.Id,
+                Text = x.Text,
+                TranslatedText = translationsByItemId[x.Id]?.TranslatedText
+            }));
         });
         return Task.CompletedTask;
     }
 }
 
-public class Item
+public class TranslationRecord
 {
-    public int Int { get; set; }
-    public string Text { get; set; } = string.Empty;
+    public int Id { get; set; }
+    public int ItemId { get; set; }
+    public required string TranslatedText { get; set; }
+}
+
+public class ItemRecord
+{
+    public int Id { get; set; }
+    public required string Text { get; set; }
+}
+
+public class ListedItemDto
+{
+    public int Id { get; set; }
+    public required string Text { get; set; }
+    public required string? TranslatedText { get; set; }
 }

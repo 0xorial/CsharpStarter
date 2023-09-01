@@ -19,7 +19,7 @@ public class TestAssemblyInitializer
             // warmup backend to have a consistent timing in individual tests
             // (otherwise first tests will take longer than the rest, depending on the order in which they ran)
             using var h = await TestHelper.Create();
-            await (await h.GetClient().Request().GetAsync()).GetStringAsync();
+            await (await h.GetClient().Request("list").GetAsync()).GetStringAsync();
         }
     }
 }

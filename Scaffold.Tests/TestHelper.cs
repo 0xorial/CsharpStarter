@@ -2,15 +2,18 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.TestHost;
 using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Serilog;
 using Serilog.Core;
 using Serilog.Events;
 using Respawn;
+using Scaffold.Api;
 
 namespace Scaffold.Tests;
 
 public class TestHelper : IDisposable
 {
+    public ExternalServices ExternalServices { get; }
     public bool AllowLogsErrors = false;
     private readonly WebApplication _webApplication;
     private readonly AccumulatingLogEventSink _logSink;
@@ -24,6 +27,11 @@ public class TestHelper : IDisposable
             .AddEnvironmentVariables()
             .AddInMemoryCollection(configOverrides ?? Array.Empty<KeyValuePair<string, string?>>());
         await Program.ConfigureBuilderAsync(builder);
+
+
+        var externals = new ExternalServices();
+
+        builder.Services.AddSingleton<ITranslationService>(externals.TranslationService);
 
         builder.Host.UseSerilog((context, configuration) =>
         {
@@ -44,7 +52,7 @@ public class TestHelper : IDisposable
         await Program.ConfigureApplicationAsync(app);
         await app.StartAsync();
 
-        return new TestHelper(app, sink);
+        return new TestHelper(app, sink, externals);
     }
 
     private static readonly Checkpoint Checkpoint = new()
@@ -75,11 +83,14 @@ public class TestHelper : IDisposable
         return new FlurlClient(_webApplication.GetTestClient());
     }
 
-    private TestHelper(WebApplication webApplication, AccumulatingLogEventSink accumulatingLogEventSink)
+    private TestHelper(WebApplication webApplication, AccumulatingLogEventSink accumulatingLogEventSink,
+        ExternalServices externalServices)
     {
+        ExternalServices = externalServices;
         _webApplication = webApplication;
         _logSink = accumulatingLogEventSink;
     }
+
 
     public void Dispose()
     {

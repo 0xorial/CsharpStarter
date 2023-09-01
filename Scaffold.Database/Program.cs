@@ -2,7 +2,6 @@
 using FluentMigrator.Runner;
 using FluentMigrator.Runner.Initialization;
 using FluentMigrator.Runner.Logging;
-using Microsoft.Data.SqlClient;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -31,7 +30,7 @@ namespace Scaffold.Database
 
             if (!string.IsNullOrWhiteSpace(configRoot[IsInPreviewModeArgumentKey]))
             {
-                isInPreviewMode = bool.Parse(configRoot[IsInPreviewModeArgumentKey]);
+                isInPreviewMode = bool.Parse(configRoot[IsInPreviewModeArgumentKey]!);
             }
 
             Console.WriteLine($"Preview: '{isInPreviewMode}'");
@@ -40,14 +39,14 @@ namespace Scaffold.Database
 
             if (!string.IsNullOrWhiteSpace(configRoot[OutputFilePathArgumentKey]))
             {
-                outputFilePath = configRoot[OutputFilePathArgumentKey];
+                outputFilePath = configRoot[OutputFilePathArgumentKey]!;
             }
 
             Console.WriteLine($"Output File Path: '{outputFilePath}'");
 
             if (!string.IsNullOrWhiteSpace(configRoot[DowngradeDatabaseArgumentKey]))
             {
-                downgradeVersion = int.Parse(configRoot[DowngradeDatabaseArgumentKey]);
+                downgradeVersion = int.Parse(configRoot[DowngradeDatabaseArgumentKey]!);
             }
 
             Console.WriteLine(downgradeVersion.HasValue
@@ -56,7 +55,7 @@ namespace Scaffold.Database
 
             if (!string.IsNullOrWhiteSpace(configRoot[ConnectionStringArgumentKey]))
             {
-                connectionString = configRoot[ConnectionStringArgumentKey];
+                connectionString = configRoot[ConnectionStringArgumentKey]!;
             }
             else
             {
@@ -64,12 +63,12 @@ namespace Scaffold.Database
                     .Build();
                 if (!string.IsNullOrWhiteSpace(configRoot[AppSettingsConnectionStringArgumentKey]))
                 {
-                    var connectionStringName = configRoot[AppSettingsConnectionStringArgumentKey];
-                    connectionString = config.GetConnectionString(connectionStringName);
+                    var connectionStringName = configRoot[AppSettingsConnectionStringArgumentKey]!;
+                    connectionString = config.GetConnectionString(connectionStringName)!;
                 }
                 else
                 {
-                    connectionString = config.GetConnectionString("ConnectionStringLocal");
+                    connectionString = config.GetConnectionString("ConnectionStringLocal")!;
                 }
             }
 
